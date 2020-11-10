@@ -1,0 +1,185 @@
+:experimental:
+= Messaging stack on-boarding
+
+NOTE: This is a work in progress document
+
+This documentation is designed as a walk through to onboard user to the ABC-RP messaging stack.
+It will demonstrate an exempla onboarding process as well as linking to further reading regarding the APIs and standards employed.
+
+Efforts have been made to link to rather then duplicate other documentation.
+
+== Overview
+
+The ABC messaging stack is based on the following projects and standards:
+
+* link:https://mqtt.org/[MQTT] (Network protocol)
+* link:https://www.eclipse.org/hono/[Eclipse Hono] (API definitions)
+* link:https://github.com/theodi/BDNS[Building Device Naming Standards initiative (BDNS)] project (Device naming)
+* link:https://brickschema.org/[Brick Schema] (Point naming)
+* link:https://github.com/faucetsdn/udmi[UDMI] (Payload format)
+
+=== Contributing
+
+This document should comply with the link:https://github.com/abc-rp/styleguide#documentation[ABC-RP styleguide] for documentation.
+
+== Pre-requisites
+
+=== Command line tools
+
+The usual command line tools:
+
+* [command]`hono-cli` - aka link:https://www.eclipse.org/hono/downloads/[Hono command line client]
+* [command]`hat` - aka link:https://github.com/ctron/hat[Hono Admin Tool]
+* [command]`http` - aka link:https://httpie.org/[HTTPie]
+* [command]`mqtt` - aka link:https://github.com/hivemq/mqtt-cli[MQTT CLI]
+
+
+== Registering Devices
+
+When registering devices there are a number of details that you need to know:
+
+* Network Hostnames
+* Your Tenant ID
+* Device IDs
+* Credentials
+
+=== Network Hostnames
+
+You will need to know the domain names and ports used by the ABC-RP infrastructure so that you can register your devices and have them communicate with the stack.
+These will be provided by ABC-RP as part of your onboarding information.
+Example values are shown below:
+
+* `registry.facilities.abc-rp.com:28080` Device Registration
+* `mqtt.facilities.abc-rp.com:1883` Devices connecting to MQTT Protocol Adapter
+* `amqp.facilities.abc-rp.com:15671` Client applications consuming data
+
+=== Tenant ID
+
+link:https://www.eclipse.org/hono/docs/1.4/concepts/tenancy/[Hono Multi-Tenancy]
+
+link:https://www.eclipse.org/hono/docs/1.4/api/tenant/[Tenant API Specification]
+
+You will be provided a Tenant ID as part of your onboarding information.
+This is used internally to manage data and data streams into strictly isolated subsets.  
+
+An example Tenant ID might be:
+
+* `swansea.iot`
+
+=== Device ID
+
+link:https://www.eclipse.org/hono/docs/1.4/concepts/device-identity/[Hono Device Identity]
+
+link:https://www.eclipse.org/hono/docs/1.4/api/device-registration/[Device Registration API Specification]
+
+link:https://github.com/theodi/BDNS[Building Device Naming Standards initiative (BDNS)]
+
+
+Device naming should follow the emerging [acronym]`BDNS` standard.
+The specification can be found on this link:https://github.com/theodi/BDNS/blob/master/BDNS_Specification_naming_syntax.md[Github page].
+Also follow the current link:https://github.com/theodi/BDNS/blob/master/BDNS_Abbreviations_Register.csv[Abbreviations Register].
+
+NOTE: Check the link:https://github.com/theodi/BDNS/branches[development branches] for the latest abbreviations
+
+All devices should have a Device ID even if their communication is handled by a Device Gateway.
+The optional prefix is strongly encouraged.
+
+Example Device IDs:
+
+* `GB-LON-BLD2_TSTAT-1` First thermostat in the UK, London, building `BLD2`.
+* `JE-JE3-BLD1_TPS-75` Seventy fifth temperature sensor in Jersey, postcode district 3, building `BLD1`
+
+An optional suffix can also be used as required.
+
+* `GB-LON-BLD2_TSTAT-1_RH-2-3-25-CO2` 
+
+=== Device Gateway
+
+link:https://www.eclipse.org/hono/docs/1.4/concepts/connecting-devices/#connecting-via-a-device-gateway[Connecting via a Device Gateway]
+
+The most straight forward scenario is a device connecting to one of Hono’s protocol adapters directly via IP based network infrastructure.
+For this to work, the device needs to use a supported communication protocol. For the ABC-RP stack MQTT is recommended.
+
+In some cases, a device may not be able to directly connect to one of Hono’s protocol adapters. An example is a device that uses a serial bus or radio waves for local communication. Such devices can be connected to a protocol adapter by means of a device gateway which acts on behalf of the device(s) when communicating with Hono.
+
+Device Gateways have the `BDNS` abbreviation `CGW`.
+For example:
+
+ * `GB-LON-BLD2_CGW-1` First Device Gateway in the UK, London, building `BLD2`.
+
+This gateway, for example, may handel communications for the `GB-LON-BLD2_TSTAT-1` sensor mentioned above.
+
+When creating and modifying Device Gateways they are treated in exactly the same way as Devices.
+
+=== Credentials
+
+link:https://www.eclipse.org/hono/docs/1.4/concepts/device-identity/#device-authentication[Device Authentication]
+
+link:https://www.eclipse.org/hono/docs/1.4/api/credentials/[Credentials API Specification]
+
+After registering a new device, you must set the user name and password credentials for the device.
+
+=== Creating a new Tenant
+
+=== Adding a Device to the Tenant
+
+This can be automated using HTTP API.
+
+=== Setting a Password for the Device
+
+== Starting the example Application
+
+== Publishing Data to the MQTT Adapter
+
+=== Point naming
+
+link:https://brickschema.org/[Brick Schema]
+
+Each of the devices that we have created will publish various data points.
+
+The naming for these data points should refer to the link:https://brickschema.org/[Brick Schema].
+
+NOTE: The link:https://github.com/theodi/BDNS/blob/master/BDNS_Abbreviations_Register.csv[BDNS register] references appropriate Brick classes for different asset types.
+
+For a `TPS` temperature sensor device we may use Brick data point names from the link:https://brickschema.org/ontology/1.1/classes/Air_Temperature_Sensor[Air Temperature Sensor] sub class of:
+
+* `supply_air_temperature_sensor`
+* `zone_air_temperature_sensor`
+* `return_air_temperature_sensor`
+
+=== Payload
+
+link:https://github.com/faucetsdn/udmi[UDMI]
+
+When we have identified the point names for our device we need to encode them into a `json` payload.
+
+To do this we will follow the link:https://github.com/faucetsdn/udmi[UDMI] Schema.
+
+TIP: Arup provide a useful helper library link:https://github.com/arupiot/pyudmi[pyudmi] for working with UDMI objects in python.
+
+An example payload for our Jersey temperature sensor `JE-JE3-BLD1_TPS-75` using the above point names may look something like the below:
+
+[source,json]
+----
+{
+  "version": 1,
+  "timestamp": "2019-01-17T14:02:29.364Z",
+  "points": {
+    "supply_air_temperature_sensor": {
+      "present_value": 20.30108642578125
+    },
+    "zone_air_temperature_sensor": {
+      "present_value": 17.23421412344333
+    },
+    "return_air_temperature_sensor": {
+      "present_value": 18.23423567344323
+    }
+  }
+}
+----
+
+NOTE: If developing a Device Gateway you would construct a separate payload for each child device that the gateways communicates on behalf of. 
+
+=== Publishing Telemetry Data to the MQTT Adapter
+
+=== Publishing Events to the MQTT Adapter
