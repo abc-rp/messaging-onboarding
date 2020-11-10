@@ -3,10 +3,10 @@
 
 NOTE: This is a work in progress document
 
-This documentation is designed as a walk through to onboard user to the ABC-RP messaging stack.
-It will demonstrate an exempla onboarding process as well as linking to further reading regarding the APIs and standards employed.
+This documentation is designed as a walk-through to onboard users to the ABC-RP messaging stack.
+It will demonstrate an exemplary onboarding process as well as linking to further reading regarding the APIs and standards employed.
 
-Efforts have been made to link to rather then duplicate other documentation.
+Efforts have been made to link to rather than duplicate other documentation.
 
 == Overview
 
@@ -97,7 +97,7 @@ An optional suffix can also be used as required.
 
 link:https://www.eclipse.org/hono/docs/1.4/concepts/connecting-devices/#connecting-via-a-device-gateway[Connecting via a Device Gateway]
 
-The most straight forward scenario is a device connecting to one of Hono’s protocol adapters directly via IP based network infrastructure.
+The most straightforward scenario is a device connecting to one of Hono’s protocol adapters directly via IP based network infrastructure.
 For this to work, the device needs to use a supported communication protocol. For the ABC-RP stack MQTT is recommended.
 
 In some cases, a device may not be able to directly connect to one of Hono’s protocol adapters. An example is a device that uses a serial bus or radio waves for local communication. Such devices can be connected to a protocol adapter by means of a device gateway which acts on behalf of the device(s) when communicating with Hono.
@@ -107,7 +107,7 @@ For example:
 
  * `GB-LON-BLD2_CGW-1` First Device Gateway in the UK, London, building `BLD2`.
 
-This gateway, for example, may handel communications for the `GB-LON-BLD2_TSTAT-1` sensor mentioned above.
+This gateway, for example, may handle communications for the `GB-LON-BLD2_TSTAT-1` sensor mentioned above.
 
 When creating and modifying Device Gateways they are treated in exactly the same way as Devices.
 
@@ -141,7 +141,7 @@ The naming for these data points should refer to the link:https://brickschema.or
 
 NOTE: The link:https://github.com/theodi/BDNS/blob/master/BDNS_Abbreviations_Register.csv[BDNS register] references appropriate Brick classes for different asset types.
 
-For a `TPS` temperature sensor device we may use Brick data point names from the link:https://brickschema.org/ontology/1.1/classes/Air_Temperature_Sensor[Air Temperature Sensor] sub class of:
+For a `TPS` temperature sensor device we may use Brick data point names from the link:https://brickschema.org/ontology/1.1/classes/Air_Temperature_Sensor[Air Temperature Sensor] subclass of:
 
 * `supply_air_temperature_sensor`
 * `zone_air_temperature_sensor`
@@ -155,7 +155,7 @@ When we have identified the point names for our device we need to encode them in
 
 To do this we will follow the link:https://github.com/faucetsdn/udmi[UDMI] Schema.
 
-TIP: Arup provide a useful helper library link:https://github.com/arupiot/pyudmi[pyudmi] for working with UDMI objects in python.
+TIP: Arup provides a useful helper library link:https://github.com/arupiot/pyudmi[pyudmi] for working with UDMI objects in python.
 
 An example payload for our Jersey temperature sensor `JE-JE3-BLD1_TPS-75` using the above point names may look something like the below:
 
