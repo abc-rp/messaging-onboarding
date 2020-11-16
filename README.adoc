@@ -175,7 +175,7 @@ NOTE: If developing a Device Gateway you would construct a separate payload for 
 
 link:https://www.eclipse.org/hono/getting-started/[Hono Getting started]
 
-NOTE: The commands bellow are prefixed with the `$` character which represent the command prompt and should not be copied.
+NOTE: The commands below are prefixed with the `$` character which represent the command prompt and should not be copied.
 The output of the command may also be shown below.
 
 NOTE: All of the commands that use HTTPie's `http` are communicating with HTTP APIs and can be communicated with using any tools that work with HTTP.
@@ -194,8 +194,6 @@ $ export AMQP_NETWORK_IP=amqp.facilities.abc-rp.com
 
 === Creating a new Tenant
 
-NOTE: It is likely that this process has been done for you are you can just skip the part where you export your tenant id.
-
 You will receive a tenantId value from ABC-RP.
 Set it up as an environment variable:
 
@@ -204,7 +202,10 @@ Set it up as an environment variable:
 $ export MY_TENANT=swansea.iot
 ----
 
-Register a tenant using Hono’s Device Registry’s management HTTP API (unless you are the admin of the IOT instance skip this step):
+NOTE: It is likely that this next process has been done for you so you can skip to Adding a Device to the Tenant.
+
+
+Register a tenant using Hono’s Device Registry’s management HTTP API:
 
 [source,bash]
 ----
@@ -223,7 +224,7 @@ location: /v1/tenants/swansea.iot
 
 === Adding a Device to the Tenant
 
-IMPORTANT: Rather then setting the device ID to the `BDNS` id we could let hono generate a UUID and include the `BDNS` id as metadata.
+IMPORTANT: Rather than setting the device ID to the `BDNS` id we could let hono generate a UUID and include the `BDNS` id as metadata.
 
 Register a device using Hono’s Device Registry’s management HTTP API:
 
