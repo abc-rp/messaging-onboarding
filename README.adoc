@@ -196,54 +196,54 @@ $ export AMQP_NETWORK_IP=amqp.facilities.abc-rp.com
 
 NOTE: It is likely that this process has been done for you are you can just skip the part where you export your tenant id.
 
-Register a tenant using Hono’s Device Registry’s management HTTP API (a random tenant identifier will be generated):
+You will receive a tenantId value from ABC-RP.
+Set it up as an environment variable:
 
 [source,bash]
 ----
-$ http --form POST http://$REGISTRY_IP:28080/v1/tenants
+$ export MY_TENANT=swansea.iot
+----
+
+Register a tenant using Hono’s Device Registry’s management HTTP API (unless you are the admin of the IOT instance skip this step):
+
+[source,bash]
+----
+$ http --form POST http://$REGISTRY_IP:28080/v1/tenants/$MY_TENANT
 
 HTTP/1.1 201 Created
-content-length: 45
+content-length: 20
 content-type: application/json; charset=utf-8
-etag: 62d8c518-cd1c-4ffb-a8bd-c4195259d417
-location: /v1/tenants/ff9d317d-1ad9-4684-ac60-c20f0df91c9e
+etag: fb52545d-1252-4c68-baf1-138964a111a4
+location: /v1/tenants/swansea.iot
 
 {
-    "id": "ff9d317d-1ad9-4684-ac60-c20f0df91c9e"
+    "id": "swansea.iot"
 }
-----
-
-==== Export Tenant ID
-
-You will receive a randomly generated tenantId value. It will probably be different than the value given in this example. Make sure to export it to an environment variable to make the following steps easier:
-
-[source,bash]
-----
-$ export MY_TENANT=ff9d317d-1ad9-4684-ac60-c20f0df91c9e
 ----
 
 === Adding a Device to the Tenant
 
-Register a device using Hono’s Device Registry’s management HTTP API (a random device identifier will be assigned):
+IMPORTANT: Rather then setting the device ID to the `BDNS` id we could let hono generate a UUID and include the `BDNS` id as metadata.
+
+Register a device using Hono’s Device Registry’s management HTTP API:
 
 [source,bash]
 ----
-$ http --form POST http://$REGISTRY_IP:28080/v1/devices/$MY_TENANT
+$ export MY_DEVICE=JE-JE3-BLD1_TPS-75
+----
 
+[source,bash]
+----
+$ http --form POST http://$REGISTRY_IP:28080/v1/devices/$MY_TENANT/$MY_DEVICE
 HTTP/1.1 201 Created
-content-length: 45
+content-length: 27
 content-type: application/json; charset=utf-8
-etag: e8045ecc-0b71-4002-bed0-15d0bd819535
-location: /v1/devices/ff9d317d-1ad9-4684-ac60-c20f0df91c9e/a299435d-0d79-4035-9cb3-fae2c86125c8
+etag: 24928f75-262d-4609-a03c-44831afc4acb
+location: /v1/devices/swansea.iot/JE-JE3-BLD1_TPS-75
 
 {
-    "id": "a299435d-0d79-4035-9cb3-fae2c86125c8"
+    "id": "JE-JE3-BLD1_TPS-75"
 }
-----
-
-[source,bash]
-----
-$ export MY_DEVICE=a299435d-0d79-4035-9cb3-fae2c86125c8
 ----
 
 === Setting a Password for the Device
@@ -291,7 +291,7 @@ We will be using the UDMI payload schema so will need to serialising timestamps 
 [source,bash]
 ----
 $ TZ='UTC' date --iso-8601='ns' | sed -e 's/+00:00//g' | sed -e 's/,/./g' | awk '{print $1"Z"}'
-2020-11-16T16:49:38.050086463Z
+2020-11-16T17:35:56.747500374Z
 ----
 
 NOTE: For an example of serialising timestamps in `python` review `pyudmi`'s link:https://github.com/arupiot/pyudmi/blob/0.0.3/src/udmi/base.py#L73[serialise_timestamp] function.
@@ -303,7 +303,7 @@ Now we have a timestamp we can create a simulated payload for our device and sen
 $ mqtt pub -V 3 -h $MQTT_ADAPTER_IP -t telemetry \
   -u $MY_DEVICE@$MY_TENANT -pw $MY_PWD -m '{
   "version": 1,
-  "timestamp": 2020-11-16T16:49:38.050086463Z,
+  "timestamp": 2020-11-16T17:35:56.747500374Z,
   "points": {
     "supply_air_temperature_sensor": {
       "present_value": 20.30108642578125
@@ -322,9 +322,9 @@ If you have started the downstream `hono-cli` application as described in the pr
 
 [source,bash]
 ----
-16:56:36.499 [vert.x-eventloop-thread-0] INFO  org.eclipse.hono.cli.app.Receiver - received telemetry message [device: a299435d-0d79-4035-9cb3-fae2c86125c8, content-type: application/octet-stream]: {
+17:36:11.165 [vert.x-eventloop-thread-0] INFO  org.eclipse.hono.cli.app.Receiver - received telemetry message [device: JE-JE3-BLD1_TPS-75, content-type: application/octet-stream]: {
   "version": 1,
-  "timestamp": 2020-11-16T16:56:14.727953288Z,
+  "timestamp": 2020-11-16T17:35:56.747500374Z,
   "points": {
     "supply_air_temperature_sensor": {
       "present_value": 20.30108642578125
@@ -337,7 +337,7 @@ If you have started the downstream `hono-cli` application as described in the pr
     }
   }
 }
-16:56:36.499 [vert.x-eventloop-thread-0] INFO  org.eclipse.hono.cli.app.Receiver - ... with application properties: {orig_adapter=hono-mqtt, device_id=a299435d-0d79-4035-9cb3-fae2c86125c8, qos=0, orig_address=telemetry}
+17:36:11.165 [vert.x-eventloop-thread-0] INFO  org.eclipse.hono.cli.app.Receiver - ... with application properties: {orig_adapter=hono-mqtt, device_id=JE-JE3-BLD1_TPS-75, qos=0, orig_address=telemetry}
 ----
 
 === Publishing Events to the MQTT Adapter
@@ -349,7 +349,7 @@ In a similar way you can upload events:
 $ mqtt pub -V 3 -h $MQTT_ADAPTER_IP -t event \
   -u $MY_DEVICE@$MY_TENANT -pw $MY_PWD -q 1 -m '{
   "version": 1,
-  "timestamp": 2020-11-16T17:06:30.429437466Z,
+  "timestamp": 2020-11-16T17:36:37.140545700Z,
   "points": {
     "co2_alarm": {
       "present_value": true
@@ -361,14 +361,14 @@ $ mqtt pub -V 3 -h $MQTT_ADAPTER_IP -t event \
 
 [source,bash]
 ----
-17:07:55.981 [vert.x-eventloop-thread-0] INFO  org.eclipse.hono.cli.app.Receiver - received event message [device: a299435d-0d79-4035-9cb3-fae2c86125c8, content-type: application/octet-stream]: {
+17:36:46.669 [vert.x-eventloop-thread-0] INFO  org.eclipse.hono.cli.app.Receiver - received event message [device: JE-JE3-BLD1_TPS-75, content-type: application/octet-stream]: {
   "version": 1,
-  "timestamp": 2020-11-16T17:06:30.429437466Z,
+  "timestamp": 2020-11-16T17:36:37.140545700Z,
   "points": {
     "co2_alarm": {
       "present_value": true
     }
   }
 }
-17:07:55.981 [vert.x-eventloop-thread-0] INFO  org.eclipse.hono.cli.app.Receiver - ... with application properties: {orig_adapter=hono-mqtt, device_id=a299435d-0d79-4035-9cb3-fae2c86125c8, qos=1, orig_address=event}
+17:36:46.669 [vert.x-eventloop-thread-0] INFO  org.eclipse.hono.cli.app.Receiver - ... with application properties: {orig_adapter=hono-mqtt, device_id=JE-JE3-BLD1_TPS-75, qos=1, orig_address=event}
 ----
