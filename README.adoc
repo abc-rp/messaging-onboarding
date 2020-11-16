@@ -34,7 +34,7 @@ The usual command line tools:
 * [command]`mqtt` - aka link:https://github.com/hivemq/mqtt-cli[MQTT CLI]
 
 
-== Registering Devices
+== Concepts
 
 When registering devices there are a number of details that you need to know:
 
@@ -117,19 +117,10 @@ link:https://www.eclipse.org/hono/docs/1.4/concepts/device-identity/#device-auth
 
 link:https://www.eclipse.org/hono/docs/1.4/api/credentials/[Credentials API Specification]
 
-After registering a new device, you must set the user name and password credentials for the device.
+After registering a new device (or gateway), you must set the user name and password credentials for the device to authenticate with the server.
 
-=== Creating a new Tenant
-
-=== Adding a Device to the Tenant
-
-This can be automated using HTTP API.
-
-=== Setting a Password for the Device
-
-== Starting the example Application
-
-== Publishing Data to the MQTT Adapter
+The Credentials API supports registration of multiple sets of credentials for each device.
+A device may be authenticated using different types of secrets, e.g. a `hashed password` or a `pre-shared key`, depending on the capabilities of the device and/or protocol adapter.
 
 === Point naming
 
@@ -180,6 +171,204 @@ An example payload for our Jersey temperature sensor `JE-JE3-BLD1_TPS-75` using 
 
 NOTE: If developing a Device Gateway you would construct a separate payload for each child device that the gateways communicates on behalf of. 
 
+== Example
+
+link:https://www.eclipse.org/hono/getting-started/[Hono Getting started]
+
+NOTE: The commands bellow are prefixed with the `$` character which represent the command prompt and should not be copied.
+The output of the command may also be shown below.
+
+NOTE: All of the commands that use HTTPie's `http` are communicating with HTTP APIs and can be communicated with using any tools that work with HTTP.
+For example if working with `python` you may use the link:https://requests.readthedocs.io/en/master/[Requests library].
+
+=== Setup environment variables for Hostnames
+
+If using a shell environment like link:https://www.gnu.org/software/bash/[bash] you can set up environment variables to reuse in later commands:
+
+[source,bash]
+----
+$ export REGISTRY_IP=registry.facilities.abc-rp.com
+$ export MQTT_ADAPTER_IP=mqtt.facilities.abc-rp.com
+$ export AMQP_NETWORK_IP=amqp.facilities.abc-rp.com
+----
+
+=== Creating a new Tenant
+
+NOTE: It is likely that this process has been done for you are you can just skip the part where you export your tenant id.
+
+Register a tenant using Hono’s Device Registry’s management HTTP API (a random tenant identifier will be generated):
+
+[source,bash]
+----
+$ http --form POST http://$REGISTRY_IP:28080/v1/tenants
+
+HTTP/1.1 201 Created
+content-length: 45
+content-type: application/json; charset=utf-8
+etag: 62d8c518-cd1c-4ffb-a8bd-c4195259d417
+location: /v1/tenants/ff9d317d-1ad9-4684-ac60-c20f0df91c9e
+
+{
+    "id": "ff9d317d-1ad9-4684-ac60-c20f0df91c9e"
+}
+----
+
+==== Export Tenant ID
+
+You will receive a randomly generated tenantId value. It will probably be different than the value given in this example. Make sure to export it to an environment variable to make the following steps easier:
+
+[source,bash]
+----
+$ export MY_TENANT=ff9d317d-1ad9-4684-ac60-c20f0df91c9e
+----
+
+=== Adding a Device to the Tenant
+
+Register a device using Hono’s Device Registry’s management HTTP API (a random device identifier will be assigned):
+
+[source,bash]
+----
+$ http --form POST http://$REGISTRY_IP:28080/v1/devices/$MY_TENANT
+
+HTTP/1.1 201 Created
+content-length: 45
+content-type: application/json; charset=utf-8
+etag: e8045ecc-0b71-4002-bed0-15d0bd819535
+location: /v1/devices/ff9d317d-1ad9-4684-ac60-c20f0df91c9e/a299435d-0d79-4035-9cb3-fae2c86125c8
+
+{
+    "id": "a299435d-0d79-4035-9cb3-fae2c86125c8"
+}
+----
+
+[source,bash]
+----
+$ export MY_DEVICE=a299435d-0d79-4035-9cb3-fae2c86125c8
+----
+
+=== Setting a Password for the Device
+
+[source,bash]
+----
+$ export MY_PWD=my-pwd
+$ echo '[{        
+  "type": "hashed-password",
+  "auth-id": "'$MY_DEVICE'",
+  "secrets": [{
+      "pwd-plain": "'$MY_PWD'"
+  }]
+}]' | http PUT http://$REGISTRY_IP:28080/v1/credentials/$MY_TENANT/$MY_DEVICE
+
+HTTP/1.1 204 No Content
+content-type: application/json; charset=utf-8
+etag: 5d3b8b7a-9700-45d2-809b-6e2613c82cba
+----
+
+== Starting the example Application
+
+The client can then be started from the command line as follows:
+
+[source,bash]
+----
+# in directory where the hono-cli-*-exec.jar file has been downloaded to
+$ java -jar hono-cli-*-exec.jar \
+  --hono.client.host=$AMQP_NETWORK_IP \
+  --hono.client.port=15672 \
+  --hono.client.username=consumer@HONO \
+  --hono.client.password=verysecret \
+  --spring.profiles.active=receiver \
+  --tenant.id=$MY_TENANT
+----
+
+== Publishing Data to the MQTT Adapter
+
 === Publishing Telemetry Data to the MQTT Adapter
 
+Now that the downstream application is running, devices can start publishing telemetry data and events using Hono’s protocol adapters.
+
+We will be using the UDMI payload schema so will need to serialising timestamps accordingly.  To generate such an example timestamps in bash run the following code@
+
+[source,bash]
+----
+$ TZ='UTC' date --iso-8601='ns' | sed -e 's/+00:00//g' | sed -e 's/,/./g' | awk '{print $1"Z"}'
+2020-11-16T16:49:38.050086463Z
+----
+
+NOTE: For an example of serialising timestamps in `python` review `pyudmi`'s link:https://github.com/arupiot/pyudmi/blob/0.0.3/src/udmi/base.py#L73[serialise_timestamp] function.
+
+Now we have a timestamp we can create a simulated payload for our device and send it over the MQTT protocol:
+
+[source,bash]
+----
+$ mqtt pub -V 3 -h $MQTT_ADAPTER_IP -t telemetry \
+  -u $MY_DEVICE@$MY_TENANT -pw $MY_PWD -m '{
+  "version": 1,
+  "timestamp": 2020-11-16T16:49:38.050086463Z,
+  "points": {
+    "supply_air_temperature_sensor": {
+      "present_value": 20.30108642578125
+    },
+    "zone_air_temperature_sensor": {
+      "present_value": 17.23421412344333
+    },
+    "return_air_temperature_sensor": {
+      "present_value": 18.23423567344323
+    }
+  }
+}'
+----
+
+If you have started the downstream `hono-cli` application as described in the previous section, you should now see the telemetry message being logged to the application’s console in the other terminal. The output should look something like this:
+
+[source,bash]
+----
+16:56:36.499 [vert.x-eventloop-thread-0] INFO  org.eclipse.hono.cli.app.Receiver - received telemetry message [device: a299435d-0d79-4035-9cb3-fae2c86125c8, content-type: application/octet-stream]: {
+  "version": 1,
+  "timestamp": 2020-11-16T16:56:14.727953288Z,
+  "points": {
+    "supply_air_temperature_sensor": {
+      "present_value": 20.30108642578125
+    },
+    "zone_air_temperature_sensor": {
+      "present_value": 17.23421412344333
+    },
+    "return_air_temperature_sensor": {
+      "present_value": 18.23423567344323
+    }
+  }
+}
+16:56:36.499 [vert.x-eventloop-thread-0] INFO  org.eclipse.hono.cli.app.Receiver - ... with application properties: {orig_adapter=hono-mqtt, device_id=a299435d-0d79-4035-9cb3-fae2c86125c8, qos=0, orig_address=telemetry}
+----
+
 === Publishing Events to the MQTT Adapter
+
+In a similar way you can upload events:
+
+[source,bash]
+----
+$ mqtt pub -V 3 -h $MQTT_ADAPTER_IP -t event \
+  -u $MY_DEVICE@$MY_TENANT -pw $MY_PWD -q 1 -m '{
+  "version": 1,
+  "timestamp": 2020-11-16T17:06:30.429437466Z,
+  "points": {
+    "co2_alarm": {
+      "present_value": true
+    }
+  }
+}'
+----
+
+
+[source,bash]
+----
+17:07:55.981 [vert.x-eventloop-thread-0] INFO  org.eclipse.hono.cli.app.Receiver - received event message [device: a299435d-0d79-4035-9cb3-fae2c86125c8, content-type: application/octet-stream]: {
+  "version": 1,
+  "timestamp": 2020-11-16T17:06:30.429437466Z,
+  "points": {
+    "co2_alarm": {
+      "present_value": true
+    }
+  }
+}
+17:07:55.981 [vert.x-eventloop-thread-0] INFO  org.eclipse.hono.cli.app.Receiver - ... with application properties: {orig_adapter=hono-mqtt, device_id=a299435d-0d79-4035-9cb3-fae2c86125c8, qos=1, orig_address=event}
+----
