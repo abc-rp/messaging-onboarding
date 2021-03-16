@@ -78,11 +78,11 @@ This is used internally to manage data and data streams into strictly isolated s
 
 Application IDs:
 
-* Must be DNS labels as defined by [RFC1123](https://tools.ietf.org/html/rfc1123)
+* Must be DNS labels as defined by link:https://tools.ietf.org/html/rfc1123[RFC1123]
 * This is necessary to ensure that we can use this ID for Kubernetes resources as well
-* Also see: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-label-names
+* Also see link:https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-label-names[Kubernetes Docs]
 
-An example Tenant ID might be:
+An example Application ID might be:
 
 * `swansea-iot`
 
