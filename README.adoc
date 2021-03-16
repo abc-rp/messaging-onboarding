@@ -181,13 +181,13 @@ An example payload for our Jersey temperature sensor `JE-JE3-BLD1_TPS-75` using 
 
 NOTE: If developing a Device Gateway you would construct a separate payload for each child device that the gateways communicates on behalf of. 
 
-== Channel
+=== Channel
 
 When using the recommended MQTT Endpoint the MQTT topic can be set by the device to indicate which *data stream* and event belongs to.
 
 For example when the device sends telemetry to the cloud we would expect this channel or topic to be set to `pointset`.
 
-== Site model
+=== Site model
 
 link:https://github.com/faucetsdn/udmi/blob/master/docs/site_model.md[UDMI Project Site Model]
 
