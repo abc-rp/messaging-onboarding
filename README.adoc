@@ -237,13 +237,36 @@ $ mqtt pub -v -h mqtt.facilities.abc-rp.com -p 443 \
 
 Overview of above command:
 
-* `pub` - Publish a message
-* `-h` - The hostname of the message broker
-* `-p` - The port of the message broker
-* `-u` - The username for authentication
-* `-pw` - The password for authentication
-* `-s` - Use default ssl configuration if no other ssl options are specified
-* `--cafile` - Path to a file containing trusted CA certificates to enable encrypted communication `DST Root CA X3`
-* `-t` - The topic to publish to which will be used as the channel
-* `-m` - The message to publish is UDMI format
-* `-V` - The mqtt version used by the client (v5 and v3.1.1 protocols supported)
+|===
+|Option |Description
+
+|`pub`
+|Publish a message
+
+|`-h`
+|The hostname of the message broker
+
+|`-p`
+|The port of the message broker
+
+|`-u`
+|The username for authentication
+
+|`-pw`
+|The password for authentication
+
+|`-s`
+|Use default ssl configuration if no other ssl options are specified
+
+|`--cafile`
+|Path to a file containing trusted CA certificates to enable encrypted communication `DST Root CA X3`
+
+|`-t`
+|The topic to publish to which will be used as the channel
+
+|`-m`
+|The message to publish is UDMI format
+
+|`-V`
+|The mqtt version used by the client (v5 and v3.1.1 protocols supported)
+|===
