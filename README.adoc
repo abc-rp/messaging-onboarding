@@ -189,7 +189,7 @@ For example when the device sends telemetry to the cloud we would expect this ch
 
 == Site model
 
-link:https://github.com/faucetsdn/udmi[UDMI Project Site Model]
+link:https://github.com/faucetsdn/udmi/blob/master/docs/site_model.md[UDMI Project Site Model]
 
 link:https://github.com/faucetsdn/udmi_site_model[Template UDMI site model]
 
