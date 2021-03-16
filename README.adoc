@@ -65,7 +65,7 @@ Example values are shown below:
 
 * `mqtt.facilities.abc-rp.com:443` For devices connecting to MQTT Protocol Endpoint
 
-== Encryption
+=== Encryption
 
 All our endpoint only support encrypted certificate based communication.  This is true even when using `(Username)/password` for authentication.
 
