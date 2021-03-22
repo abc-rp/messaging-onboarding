@@ -103,7 +103,7 @@ The prefix format is documented on the link:https://github.com/theodi/BDNS/blob/
 Example Device IDs:
 
 * `GB-LON-BLD2_TSTAT-1` First thermostat in the UK, London, building `BLD2`.
-* `JE-JE3-BLD1_TPS-75` Seventy fifth temperature sensor in Jersey, postcode district 3, building `BLD1`
+* `JE-STH-BLD1_TPS-75` Seventy fifth temperature sensor in Jersey, Saint Helier, building `BLD1`
 
 An optional suffix can also be used as required.
 
@@ -159,7 +159,7 @@ To do this we will follow the link:https://github.com/faucetsdn/udmi[UDMI] Schem
 
 TIP: Arup provides a useful helper library link:https://github.com/arupiot/pyudmi[pyudmi] for working with UDMI objects in python.
 
-An example payload for our Jersey temperature sensor `JE-JE3-BLD1_TPS-75` using the above point names may look something like the below:
+An example payload for our Jersey temperature sensor `JE-STH-BLD1_TPS-75` using the above point names may look something like the below:
 
 [source,json]
 ----
@@ -218,7 +218,7 @@ Now we have a timestamp we can create a simulated payload for our device and sen
 [source,bash]
 ----
 $ mqtt pub -v -h mqtt.facilities.abc-rp.com -p 443 \
-  -u 'JE-JE3-BLD1_TPS-75@swansea-iot' -pw 'my-strong-password' \
+  -u 'JE-STH-BLD1_TPS-75@swansea-iot' -pw 'my-strong-password' \
   -s --cafile ./dstrootx3.pem -t pointset -m '{
   "version": 1,
   "timestamp": 2020-11-16T17:35:56.747Z,
@@ -254,7 +254,7 @@ Overview of above command:
 |The port of the message broker
 
 |`-u`
-|`JE-JE3-BLD1_TPS-75@swansea-iot`
+|`JE-STH-BLD1_TPS-75@swansea-iot`
 |The username for authentication `<device>@<application>`
 
 |`-pw`
