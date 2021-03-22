@@ -98,6 +98,7 @@ NOTE: Check the link:https://github.com/theodi/BDNS/branches[development branche
 
 All devices should have a Device ID even if their communication is handled by a Device Gateway.
 The optional prefix is strongly encouraged.
+The prefix format is documented on the link:https://github.com/theodi/BDNS/blob/master/BDNS_Specification_naming_syntax.md#format-2[BDNS site] and should use link:https://www.nationsonline.org/oneworld/country_code_list.htm[ISO Alpha-2 Country Codes] and link:https://github.com/datasets/un-locode[UN LOCODE City Codes].
 
 Example Device IDs:
 
