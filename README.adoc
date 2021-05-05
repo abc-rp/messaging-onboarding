@@ -149,9 +149,80 @@ For a `TPS` temperature sensor device we may use Brick data point names from the
 * `zone_air_temperature_sensor`
 * `return_air_temperature_sensor`
 
+== Metadata
+
+link:https://github.com/faucetsdn/udmi[UDMI Metadata]
+
+Additional `level` and `zone` is provided at a per device level under the `system > location > section` tags.  These values should follow the ISO 19650 naming of levels and zones:
+
+    <level>_<zone>
+
+For example if device `GB-LON-BLD2_MTS-1` is located in the ground floor kitchen the `section` would be:
+
+    GF_KITCHEN-1
+
+If device `GB-LON-BLD2_MTS-2` is located in the second first floor bedroom the `section` would be:
+
+    01_BEDROOM-2
+
+Example ISO 19650 zones and levels:
+
+.Zone
+|===
+|ID |Description
+
+|ZZ
+|Multiple Zones (e.g. all of the GF)
+
+|XX
+|No Zone Applicable (rarely used)
+
+|KITCHEN-1
+|Name of a particular zone (1 indexed)
+|===
+
+NOTE: Standard domestic room / zone name register needs to be developed to make this consistent.
+
+.Level
+|===
+|ID |Description
+
+|ZZ
+|Multiple Levels
+
+|XX
+|No Level Applicable (rarely used)
+
+|GF
+|Ground Floor
+
+|01
+|Floor 1
+
+|02
+|Floor 2, etc
+
+|RF
+|Roof / Loft
+
+|M1
+|Mezzanine above Level 1
+
+|M2
+|Mezzanine above Level 2
+
+|B1
+|Floor -1
+
+|B2
+|Floor -2
+|===
+
+NOTE: Units should be in link:https://github.com/faucetsdn/udmi/blob/master/schema/units.json[BACnet engineering units].
+
 === Payload
 
-link:https://github.com/faucetsdn/udmi[UDMI]
+link:https://github.com/faucetsdn/udmi[UDMI Payload]
 
 When we have identified the point names for our device we need to encode them into a `json` payload.
 
@@ -187,6 +258,17 @@ NOTE: If developing a Device Gateway you would construct a separate payload for 
 When using the recommended MQTT Endpoint the MQTT topic can be set by the device to indicate which *data stream* and event belongs to.
 
 For example when the device sends telemetry to the cloud we would expect this channel or topic to be set to `pointset`.
+
+==== Gateways
+
+If using a gateway device, it is expected that the channel and child devices ids of the gateway are indicated using the MQTT topic:
+
+    <channel>/<device>
+
+For example if `GB-LON-BLD2_CGW-1` is sending a `pointset` on behalf of `GB-LON-BLD2_TSTAT-1` the MQTT topic would be:
+
+    pointset/GB-LON-BLD2_TSTAT-1
+
 
 === Site model
 
