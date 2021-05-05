@@ -151,7 +151,7 @@ For a `TPS` temperature sensor device we may use Brick data point names from the
 
 == Metadata
 
-link:https://github.com/faucetsdn/udmi[UDMI Metadata]
+link:https://github.com/faucetsdn/udmi/blob/master/docs/metadata.md[UDMI Metadata]
 
 Additional `level` and `zone` is provided at a per device level under the `system > location > section` tags.  These values should follow the ISO 19650 naming of levels and zones:
 
@@ -220,9 +220,9 @@ NOTE: Standard domestic room / zone name register needs to be developed to make 
 
 NOTE: Units should be in link:https://github.com/faucetsdn/udmi/blob/master/schema/units.json[BACnet engineering units].
 
-=== Payload
+=== Telemetry
 
-link:https://github.com/faucetsdn/udmi[UDMI Payload]
+link:https://github.com/faucetsdn/udmi/blob/master/docs/pointset.md#telemetry[UDMI Pointset]
 
 When we have identified the point names for our device we need to encode them into a `json` payload.
 
