@@ -69,7 +69,9 @@ Example values are shown below:
 
 All our endpoint only support encrypted certificate based communication.  This is true even when using `(Username)/password` for authentication.
 
-Typically we will use link:https://letsencrypt.org/[Let's Encrypt] TLS certificates which get refreshed regularly.  As such you should set up your devices to trust the link:https://www.identrust.com/dst-root-ca-x3[DST Root CA X3] certificate not the one that is currently on our server as this will be replaced.
+Typically we will use link:https://letsencrypt.org/[Let's Encrypt] TLS certificates which get refreshed regularly.  As such you should set up your devices to trust the link:https://letsencrypt.org/certificates/[ISRG Root X1] certificate not the one that is currently on our server as this will be replaced.
+
+NOTE: Ideally you should use your platform's certificate bundles which should have updates applied automatically.  Please see the Let’s Encrypt link:https://letsencrypt.org/docs/certificate-compatibility/[Certificate Compatibility] page for more information.  This will mitigate issues that will arise when the current `ISRG Root X1` certificates expires in 2035 _(as of 2021)_.
 
 === Application ID
 
