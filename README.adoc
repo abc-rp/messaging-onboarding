@@ -102,6 +102,10 @@ All devices should have a Device ID even if their communication is handled by a 
 The optional prefix is strongly encouraged.
 The prefix format is documented on the link:https://github.com/theodi/BDNS/blob/master/BDNS_Specification_naming_syntax.md#format-2[BDNS site] and should use link:https://www.nationsonline.org/oneworld/country_code_list.htm[ISO Alpha-2 Country Codes] and link:https://github.com/datasets/un-locode[UN LOCODE City Codes].
 
+NOTE: In some special cases we may use ZZZ in the prefix to denote a site that coverers multiple UN LOCODE City Codes.
+ZZZ is not used for any GB locations so there is not a conflict.
+This is would mainly be used when the site covers a number of small buildings that do not warrant the overhead of having their own application.
+
 Example Device IDs:
 
 * `GB-LON-BLD2_TSTAT-1` First thermostat in the UK, London, building `BLD2`.
