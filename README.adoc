@@ -155,6 +155,8 @@ For a `TPS` temperature sensor device we may use Brick data point names from the
 * `zone_air_temperature_sensor`
 * `return_air_temperature_sensor`
 
+NOTE: We use expect names to be in `snake_case` rather than `camelCase` as presented on the Brick Schema site.
+
 == Metadata
 
 link:https://github.com/faucetsdn/udmi/blob/master/docs/metadata.md[UDMI Metadata]
