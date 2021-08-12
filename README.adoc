@@ -157,6 +157,14 @@ For a `TPS` temperature sensor device we may use Brick data point names from the
 
 NOTE: We expect names to be in `snake_case` rather than `camelCase` which is used on the Brick Schema site.
 
+If there are multiple points of the same type on the same device these should be suffixed with an (1 indexed) index.
+For example:
+
+* `zone_air_temperature_sensor_1`
+* `zone_air_temperature_sensor_2`
+
+If the device only has one point of a type no index is required.
+
 == Metadata
 
 link:https://github.com/faucetsdn/udmi/blob/master/docs/metadata.md[UDMI Metadata]
