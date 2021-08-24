@@ -147,8 +147,6 @@ Each of the devices that we have created will publish various data points.
 
 The naming for these data points should refer to the link:https://brickschema.org/[Brick Schema].
 
-NOTE: The link:https://github.com/theodi/BDNS/blob/master/BDNS_Abbreviations_Register.csv[BDNS register] references appropriate Brick classes for different asset types.
-
 For a `TPS` temperature sensor device we may use Brick data point names from the link:https://brickschema.org/ontology/1.1/classes/Air_Temperature_Sensor[Air Temperature Sensor] subclass of:
 
 * `supply_air_temperature_sensor`
@@ -340,10 +338,6 @@ $ mqtt pub -v -h mqtt.facilities.abc-rp.com -p 443 \
   }
 }'
 ----
-
-
-NOTE: On some devices you may need to increase the connection timeout if the defaults are overly sensitive.
-This is due to the serverless nature of our systems which may have a slower response time if receiving a message after a period of inactivity.
 
 Overview of above command:
 
