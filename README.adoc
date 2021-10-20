@@ -274,6 +274,8 @@ An example payload for our Jersey temperature sensor `JE-STH-BLD1_TPS-75` using 
 
 NOTE: If developing a Device Gateway you would construct a separate payload for each child device that the gateways communicates on behalf of. 
 
+NOTE: It is expected that `present_value` is of type `NUMERIC` to be fully ingested into our infrastructure.
+
 === Channel
 
 When using the recommended MQTT Endpoint the MQTT topic can be set by the device to indicate which *data stream* and event belongs to.
