@@ -386,3 +386,11 @@ Overview of above command:
 |`3`
 |The mqtt version used by the client (v5 and v3.1.1 protocols supported)
 |===
+
+== Debugging
+
+Our MQTT endpoint is currently setup for ingress only.
+As such you should not expect to be able to subscribe to topics on the server.
+
+You should get debugging information from your client regarding communication and security (certificates / authentication).
+If this is functioning correctly please contact us and we will advise of any other issues for the messages being ingested into our systems.
