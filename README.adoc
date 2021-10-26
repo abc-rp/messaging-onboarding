@@ -295,6 +295,8 @@ For example if `GB-LON-BLD2_CGW-1` is sending a `pointset` on behalf of `GB-LON-
 
 === Site model
 
+link:https://docs.google.com/spreadsheets/d/1jsDRwdrpxBFjnMCsO8DZnmEaZgiWW65tKhX_HIypgGc/edit?usp=sharing[Helper Spreadsheet template]
+
 link:https://github.com/faucetsdn/udmi/blob/master/docs/site_model.md[UDMI Project Site Model]
 
 link:https://github.com/faucetsdn/udmi_site_model[Template UDMI site model]
