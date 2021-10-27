@@ -274,7 +274,7 @@ An example payload for our Jersey temperature sensor `JE-STH-BLD1_TPS-75` using 
 
 NOTE: If developing a Device Gateway you would construct a separate payload for each child device that the gateways communicates on behalf of. 
 
-NOTE: It is expected that `present_value` is of type `NUMERIC` to be fully ingested into our infrastructure.
+NOTE: It is expected that `present_value` is of type `NUMERIC` to be fully ingested into our infrastructure.  This can include objects that can be cast to this type such as `INT` and `BOOL`.
 
 === Channel
 
