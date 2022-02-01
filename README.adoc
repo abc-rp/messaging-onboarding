@@ -239,7 +239,7 @@ NOTE: Standard domestic room / zone name register needs to be developed to make 
 |Floor -2
 |===
 
-NOTE: Units should be in link:https://github.com/faucetsdn/udmi/blob/master/schema/units.json[BACnet engineering units].
+NOTE: Units should be in link:https://github.com/faucetsdn/udmi/blob/1.2.1/schema/units.json[BACnet engineering units].
 
 === Telemetry
 
