@@ -120,6 +120,7 @@ Example Device IDs:
 * `JE-STH-BLD1_TPS-75` Seventy fifth temperature sensor in Jersey, Saint Helier, building `BLD1`
 
 NOTE: All devices in under an application must have unique names.
+
 === Device Gateways
 
 The most straightforward scenario is a device connecting to one of ABC-RP’s protocol endpoints directly via IP based network infrastructure.
