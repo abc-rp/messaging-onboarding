@@ -206,7 +206,7 @@ Example ISO 19650 zones and levels:
 |Name of a particular zone (1 indexed)
 |===
 
-NOTE: See link:https://docs.google.com/spreadsheets/d/1Y_UYp4d_J78YZaz6Ow8--StBns3n4Sj5ehHaQf_ee4s[zones spreadsheet] for currently used domestic zones. 
+NOTE: See link:https://docs.google.com/spreadsheets/d/e/2PACX-1vQPnrZD7-jdw6qK-7PEFHt3azwtwiHvTg6yv493Vtn8o_qPAkpI49qiEkzRX4kqiL2koQcAiyrwWamh/pubhtml[zones spreadsheet] for currently used domestic zones. 
 
 .Level
 |===
