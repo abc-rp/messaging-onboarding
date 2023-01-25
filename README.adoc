@@ -1,8 +1,6 @@
 :experimental:
 = Messaging stack on-boarding
 
-NOTE: This is v0.2.0 of this document. See link:https://github.com/abc-rp/messaging-onboarding/tree/v0.1.0[v0.1.0] for the previous version.
-
 This documentation is designed as a walk-through to onboard users to the ABC-RP messaging stack.
 It will demonstrate an exemplary onboarding process as well as linking to further reading regarding the standards employed.
 
@@ -13,8 +11,7 @@ Efforts have been made to link to rather than duplicate other documentation.
 The ABC-RP messaging stack is based on the following projects and standards:
 
 * link:https://mqtt.org/[MQTT] (Network protocol)
-* link:https://github.com/google/digitalbuildings/blob/master/ontology/docs/ontology.md#entity-types[DBO Entities] (Device naming)
-* link:https://www.iso.org/obp/ui/#iso:code:3166:GB[ISO 3166-2:GB] (Device Location Prefix)
+* link:https://github.com/theodi/BDNS[Building Device Naming Standards initiative (BDNS)] (Device naming)
 * link:https://github.com/google/digitalbuildings/blob/master/ontology/docs/ontology.md#fields[DBO Data Fields] (Point naming)
 * link:https://github.com/google/digitalbuildings/blob/master/ontology/docs/ontology.md#dimensional-units[DBO Units] (Units)
 * link:https://github.com/faucetsdn/udmi[UDMI] (Payload format)
@@ -31,7 +28,7 @@ The usual command line tools:
 
 This section explains some key concepts of the ABC-RP messaging infrastructure.
 
-We align with the link:https://github.com/google/digitalbuildings[Digital Buildings Ontology (DBO)] and link:https://github.com/faucetsdn/udmi[Universal Device Management Interface (UDMI)] projects so please review these projects documentation alongside this.
+We align with the link:https://github.com/theodi/BDNS[Building Device Naming Standards initiative (BDNS)], link:https://github.com/google/digitalbuildings[Digital Buildings Ontology (DBO)] and link:https://github.com/faucetsdn/udmi[Universal Device Management Interface (UDMI)] projects so please review these projects documentation alongside this.
 
 === Applications
 
@@ -93,11 +90,13 @@ An example Application ID might be:
 
 === Device ID
 
-link:https://github.com/google/digitalbuildings/blob/master/ontology/docs/ontology.md#entity-types[DBO Entities]
+link:https://github.com/theodi/BDNS[Building Device Naming Standards initiative (BDNS)]
 
-Device naming should follow [acronym]`DBO` entity type naming.
-Details can be found on this link:https://github.com/google/digitalbuildings/blob/master/ontology/docs/ontology.md#entity-types[Github page].
-link:https://github.com/google/digitalbuildings/tree/master/ontology/yaml/resources[Current entity types] should be adopted when naming devices.
+Device naming should follow the emerging [acronym]`BDNS` standard.
+The specification can be found on this link:https://github.com/theodi/BDNS/blob/master/BDNS_Specification_naming_syntax.md[Github page].
+Also follow the current link:https://github.com/theodi/BDNS/blob/master/BDNS_Abbreviations_Register.csv[Abbreviations Register].
+
+NOTE: Check the link:https://github.com/theodi/BDNS/branches[development branches] for the latest abbreviations
 
 All devices should have a Device ID even if their communication is handled by a Device Gateway.
 
@@ -111,21 +110,16 @@ where:
 
 `<COUNTRY>-<CITY>-<BUILDING>` = assigned location code for building, composed of:
 
-* `<COUNTRY>` = ISO 3166-1 Alpha-2 Country Code
-* `<SUBDIVISION>` = BS 6879 Second-level subdivision
+* `<COUNTRY>` = link:https://www.nationsonline.org/oneworld/country_code_list.htm[ISO 3166-1 Alpha-2 Country Code]
+* `<SUBDIVISION>` = link:https://github.com/datasets/un-locode[UN LOCODE City Codes]
 * `<BUILDING>` = the project specific abbreviation for the building
-
-A full list of available prefixes can be found in the link:https://www.iso.org/obp/ui/#iso:code:3166:GB[ISO 3166-2:GB] docs.
-
-NOTE: In some special cases we may use ZZZ in the prefix to denote a site that coverers multiple BS 6879 subdivisions.
-ZZZ is not used for any GB locations so there is no conflict.
-This is would mainly be used when the site covers a number of small buildings that do not warrant having their own application.
 
 Example Device IDs:
 
-* `GB-DEN-BLD2_CO2M-1` First carbon dioxide monitoring sensor in the UK, Denbighshire, building `BLD2`.
-* `GB-CMN-BLD1_ZTM-75` Seventy fifth zone temperature monitoring sensor in the UK, Carmarthenshire, building `BLD1`
+* `GB-LON-BLD2_TSTAT-1` First thermostat in the UK, London, building `BLD2`.
+* `JE-STH-BLD1_TPS-75` Seventy fifth temperature sensor in Jersey, Saint Helier, building `BLD1`
 
+NOTE: All devices in under an application must have unique names.
 === Device Gateways
 
 The most straightforward scenario is a device connecting to one of ABC-RP’s protocol endpoints directly via IP based network infrastructure.
@@ -133,20 +127,18 @@ For this to work, the device needs to use a supported communication protocol. Fo
 
 In some cases, a device may not be able to directly connect to one of these protocol endpoints. An example is a device that uses a serial bus or radio waves for local communication. Such devices can be connected to a protocol endpoint by means of a device gateway which acts on behalf of the device(s) when communicating with the cloud.
 
-Device Gateways have the `DBO` name `PASSTHROUGH`.
+Device Gateways have the `BDNS` abbreviation `CGW`.
 For example:
 
- * `GB-DEN-BLD2_PASSTHROUGH-1` First Device Gateway in the UK, Denbighshire, building `BLD2`.
+ * `GB-LON-BLD2_CGW-1` First Device Gateway in the UK, London, building `BLD2`.
 
-This gateway, for example, may handle communications for the `GB-DEN-BLD2_CO2M-1` sensor mentioned above.
+This gateway, for example, may handle communications for the `GB-LON-BLD2_TSTAT-1` sensor mentioned above.
 
 When creating and modifying Device Gateways they are treated in exactly the same way as Devices.
 
 === Credentials
 
 You will be provided a Device credentials as part of your onboarding information.
-
-NOTE: Typically we will use `(Username)/password` for authentication.  If you would like to use `PSK` or `X.509 certificate` please let us know.
 
 NOTE: If you intend to onboard many devices we can discuss ways of automating this process.
 
@@ -158,7 +150,7 @@ Each of the devices that we have created will publish various data points.
 
 The naming for these data points should refer to the https://github.com/google/digitalbuildings/blob/master/ontology/docs/ontology.md#fields[DBO Data Fields].
 
-For a `CO2M` carbon dioxide monitoring device we would use the DBO data point name from the link:https://github.com/google/digitalbuildings/blob/bdde336cdf98820adaa179150b093076548a75fe/ontology/yaml/resources/HVAC/entity_types/ABSTRACT.yaml#L1089[CO2M Device]:
+For a `CDS` carbon dioxide sensor device we would use the DBO data point name:
 
 * `zone_air_co2_concentration_sensor`
 
@@ -181,9 +173,11 @@ If the device only has one point of a type no index is required.
 
 == Metadata
 
-link:https://github.com/faucetsdn/udmi/blob/master/docs/metadata.md[UDMI Metadata]
+Metadata is managed on per a application bases.  As part of the onboarding process you will typically be provided with a table / spreadsheet to populate with additional meta data.
 
-Additional `level` and `zone` is provided at a per device level under the `system > location > section` tags.  These values should follow the ISO 19650 naming of levels and zones:
+=== Section
+
+Additional `level` and `zone` information is provided at a per device level under the `section` column.  These values should follow the ISO 19650 naming of levels and zones:
 
     <level>_<zone>
 
@@ -211,7 +205,7 @@ Example ISO 19650 zones and levels:
 |Name of a particular zone (1 indexed)
 |===
 
-NOTE: Standard domestic room / zone name register needs to be developed to make this consistent.
+NOTE: See link:https://github.com/google/digitalbuildings/blob/master/ontology/docs/ontology.md#enumeration[zones spreadsheet] for currently used domestic zones. 
 
 .Level
 |===
@@ -258,7 +252,7 @@ NOTE: It is expected that `present_value` is of type `NUMERIC` to be fully inges
 
 === Telemetry
 
-link:https://github.com/faucetsdn/udmi/blob/master/docs/pointset.md#telemetry[UDMI Pointset]
+link:https://faucetsdn.github.io/udmi/docs/messages/pointset.html#event[UDMI Event Pointset]
 
 When we have identified the point names for our device we need to encode them into a `json` payload.
 
@@ -266,7 +260,7 @@ To do this we will follow the link:https://github.com/faucetsdn/udmi[UDMI] Schem
 
 TIP: We provide a CLI tool link:https://github.com/abc-rp/validate_udmi[validate_udmi] to check your json payloads.
 
-An example payload for our Carmarthenshire temperature sensor `GB-CMN-BLD1_ZTM-75` using the above point names may look something like the below:
+An example payload for our Jersey temperature sensor `JE-STH-BLD1_TPS-75` using the above point names may look something like the below:
 
 [source,json]
 ----
@@ -277,7 +271,7 @@ An example payload for our Carmarthenshire temperature sensor `GB-CMN-BLD1_ZTM-7
     "zone_air_temperature_sensor": {
       "present_value": 21.245
     },
-    "discharge_air_temperature_sensor": {
+    "return_air_temperature_sensor": {
       "present_value": 25.753
     }
   }
@@ -298,14 +292,10 @@ If using a gateway device, it is expected that the channel and child devices ids
 
     <channel>/<device>
 
-For example if `GB-DEN-BLD2_PASSTHROUGH-1` is sending a `pointset` on behalf of `GB-DEN-BLD2_CO2M-1` the MQTT topic would be:
+For example if `GB-LON-BLD2_CGW-1` is sending a `pointset` on behalf of `GB-LON-BLD2_TSTAT-1` the MQTT topic would be:
 
-    pointset/GB-DEN-BLD2_CO2M-1
+    pointset/GB-LON-BLD2_TSTAT-1
 
-
-=== Site model
-
-The site model is managed on per a application bases.  As part of the onboarding process you will typically be provided with a table / spreadsheet to populate with additional meta data.
 
 == Publishing Data to the MQTT Endpoint
 
@@ -324,7 +314,7 @@ Now we have a timestamp we can create a simulated payload for our device and sen
 [source,bash]
 ----
 $ mqtt pub -v -h mqtt.facilities.abc-rp.com -p 443 \
-  -u 'GB-CMN-BLD1_ZTM-75@swansea-prod-iot' -pw 'my-strong-password' \
+  -u 'JE-STH-BLD1_TPS-75@swansea-iot' -pw 'my-strong-password' \
   -s --cafile ./dstrootx3.pem -t pointset -m '{
   "version": 1,
   "timestamp": 2020-11-16T17:35:56.747Z,
@@ -357,7 +347,7 @@ Overview of above command:
 |The port of the message broker
 
 |`-u`
-|`GB-CMN-BLD1_ZTM-75@swansea-prod-iot`
+|`JE-STH-BLD1_TPS-75@swansea-prod-iot`
 |The username for authentication `<device>@<application>`
 
 |`-pw`
