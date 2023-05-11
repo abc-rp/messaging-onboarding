@@ -103,21 +103,21 @@ All devices should have a Device ID even if their communication is handled by a 
 The device should have a prefix using the following format:
 
 ----
-<COUNTRY>-<CITY>-<BUILDING>
+<COUNTRY>-<SUBDIVISION>-<BUILDING>
 ----
 
 where:
 
-`<COUNTRY>-<CITY>-<BUILDING>` = assigned location code for building, composed of:
+`<COUNTRY>-<SUBDIVISION>-<BUILDING>` = assigned location code for building, composed of:
 
 * `<COUNTRY>` = link:https://www.nationsonline.org/oneworld/country_code_list.htm[ISO 3166-1 Alpha-2 Country Code]
-* `<SUBDIVISION>` = link:https://github.com/datasets/un-locode[UN LOCODE City Codes]
+* `<SUBDIVISION>` = link:https://www.iso.org/obp/ui/#iso:code:3166:GB[ISO 3166-2:GB]
 * `<BUILDING>` = the project specific abbreviation for the building
 
 Example Device IDs:
 
-* `GB-LON-BLD2_TSTAT-1` First thermostat in the UK, London, building `BLD2`.
-* `JE-STH-BLD1_TPS-75` Seventy fifth temperature sensor in Jersey, Saint Helier, building `BLD1`
+* `GB-CMD-BLD2_TSTAT-1` First thermostat in the UK, Camden, building `BLD2`.
+* `GB-SWA-BLD1_TPS-75` Seventy fifth temperature sensor in Swansea, building `BLD1`
 
 NOTE: All devices in under an application must have unique names.
 
@@ -131,9 +131,9 @@ In some cases, a device may not be able to directly connect to one of these prot
 Device Gateways have the `BDNS` abbreviation `CGW`.
 For example:
 
- * `GB-LON-BLD2_CGW-1` First Device Gateway in the UK, London, building `BLD2`.
+ * `GB-CMD-BLD2_CGW-1` First Device Gateway in the UK, Camden, building `BLD2`.
 
-This gateway, for example, may handle communications for the `GB-LON-BLD2_TSTAT-1` sensor mentioned above.
+This gateway, for example, may handle communications for the `GB-CMD-BLD2_TSTAT-1` sensor mentioned above.
 
 When creating and modifying Device Gateways they are treated in exactly the same way as Devices.
 
@@ -182,11 +182,11 @@ Additional `level` and `zone` information is provided at a per device level unde
 
     <level>_<zone>
 
-For example if device `GB-LON-BLD2_MTS-1` is located in the ground floor kitchen the `section` would be:
+For example if device `GB-CAM-BLD2_MTS-1` is located in the ground floor kitchen the `section` would be:
 
     GF_KITCHEN-1
 
-If device `GB-LON-BLD2_MTS-2` is located in the second first floor bedroom the `section` would be:
+If device `GB-CAM-BLD2_MTS-2` is located in the second first floor bedroom the `section` would be:
 
     01_BEDROOM-2
 
@@ -261,7 +261,7 @@ To do this we will follow the link:https://github.com/faucetsdn/udmi[UDMI] Schem
 
 TIP: We provide a CLI tool link:https://github.com/abc-rp/validate_udmi[validate_udmi] to check your json payloads.
 
-An example payload for our Jersey temperature sensor `JE-STH-BLD1_TPS-75` using the above point names may look something like the below:
+An example payload for our Jersey temperature sensor `GB-SWA-BLD1_TPS-75` using the above point names may look something like the below:
 
 [source,json]
 ----
@@ -293,9 +293,9 @@ If using a gateway device, it is expected that the channel and child devices ids
 
     <channel>/<device>
 
-For example if `GB-LON-BLD2_CGW-1` is sending a `pointset` on behalf of `GB-LON-BLD2_TSTAT-1` the MQTT topic would be:
+For example if `GB-CAM-BLD2_CGW-1` is sending a `pointset` on behalf of `GB-CAM-BLD2_TSTAT-1` the MQTT topic would be:
 
-    pointset/GB-LON-BLD2_TSTAT-1
+    pointset/GB-CAM-BLD2_TSTAT-1
 
 
 == Publishing Data to the MQTT Endpoint
@@ -315,7 +315,7 @@ Now we have a timestamp we can create a simulated payload for our device and sen
 [source,bash]
 ----
 $ mqtt pub -v -h mqtt.facilities.abc-rp.com -p 443 \
-  -u 'JE-STH-BLD1_TPS-75@swansea-iot' -pw 'my-strong-password' \
+  -u 'GB-SWA-BLD1_TPS-75@swansea-iot' -pw 'my-strong-password' \
   -s --cafile ./dstrootx3.pem -t pointset -m '{
   "version": 1,
   "timestamp": 2020-11-16T17:35:56.747Z,
@@ -348,7 +348,7 @@ Overview of above command:
 |The port of the message broker
 
 |`-u`
-|`JE-STH-BLD1_TPS-75@swansea-prod-iot`
+|`GB-SWA-BLD1_TPS-75@swansea-prod-iot`
 |The username for authentication `<device>@<application>`
 
 |`-pw`
