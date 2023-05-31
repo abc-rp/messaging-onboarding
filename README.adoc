@@ -316,9 +316,9 @@ Now we have a timestamp we can create a simulated payload for our device and sen
 ----
 $ mqtt pub -v -h mqtt.facilities.abc-rp.com -p 443 \
   -u 'GB-SWA-BLD1_TPS-75@swansea-iot' -pw 'my-strong-password' \
-  -s --cafile ./dstrootx3.pem -t pointset -m '{
+  -s -t pointset -m '{
   "version": 1,
-  "timestamp": 2020-11-16T17:35:56.747Z,
+  "timestamp": "2019-01-17T14:02:29.364Z",
   "points": {
     "zone_air_temperature_sensor": {
       "present_value": 21.245
